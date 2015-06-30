@@ -4,6 +4,7 @@
 # https://stackoverflow.com/questions/2062051/how-do-i-parse-an-html-table-with-nokogiri
 
 require 'nokogiri'
+require 'descriptive_statistics'
 
 html = File.read 'Zero-K.html'
 
@@ -26,17 +27,12 @@ donations = details.collect do |row|
   row[:ammount]
 end
 
-def mean(array)
-  array.inject(:+).to_f / array.size
-end
-
-def median(array)
-  sorted = array.sort
-  len = sorted.length
-  return (sorted[(len - 1) / 2] + sorted[len / 2]) / 2.0
-end
-
-puts 'mean: €%.2f' % mean(donations)
-puts 'median: €%.2f' % median(donations)
+puts 'mean: €%.2f' % donations.mean
+puts 'median: €%.2f' % donations.median
+puts 'stddev: €%.2f' % donations.standard_deviation
 puts 'min: €%.2f' % donations.min
 puts 'max: €%.2f' % donations.max
+
+(10..100).step(10).each do |n|
+  puts 'percentile %d: €%.2f' % [n, donations.percentile(n)]
+end
